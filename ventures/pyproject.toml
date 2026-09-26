@@ -1,0 +1,36 @@
+[project]
+name = "venture-lab"
+version = "0.1.0"
+description = "Autonomous, budget-capped Claude agents that run a portfolio of AI monetization experiments."
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=1.8,<2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+venture-lab = "venture_lab.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["venture_lab*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+# Prose-heavy data and prompt modules.
+"venture_lab/experiments/*.py" = ["E501"]
+"venture_lab/specialized/voice.py" = ["E501"]

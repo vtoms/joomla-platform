@@ -1,0 +1,34 @@
+# Optional alternative to cron. Not active: copy to .github/workflows/ventures-tick.yml
+# and add the ANTHROPIC_API_KEY repository secret to enable it.
+# The ledger (var/) is persisted between runs with actions/cache; for durable
+# history prefer the VPS + cron setup in crontab.example.
+name: ventures-tick
+on:
+  schedule:
+    - cron: "40 12 * * 1-5"
+  workflow_dispatch: {}
+concurrency: ventures-tick
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ventures
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: actions/cache@v4
+        with:
+          path: ventures/var
+          key: ventures-var-${{ github.run_id }}
+          restore-keys: ventures-var-
+      - run: pip install -e .
+      - run: venture-lab tick && venture-lab report
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ventures-artifacts
+          path: ventures/var/artifacts

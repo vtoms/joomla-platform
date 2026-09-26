@@ -1,0 +1,36 @@
+# Copy to venture_lab.toml (git-ignored) and adjust.
+home = "var"   # ledger + artifacts; override with VENTURES_HOME
+
+[models]
+# Dynamic routing: strategy/sales work on the strongest model, drafting on the
+# mid tier, bulk extraction/classification on the cheapest (via Batch API).
+strategist = "claude-opus-5"
+worker = "claude-sonnet-5"
+bulk = "claude-haiku-4-5"
+
+[budget]
+# Hard monthly cap across all agents. Each experiment also has its own cap
+# (see `venture-lab costs`); sessions stop mid-run when either is reached.
+global_api_usd_month = 250
+
+[runs]
+max_iterations = 25        # model turns per session
+web_search_max_uses = 8    # searches per session ($10 per 1,000)
+
+[approvals]
+# Action kinds the agents may execute without you. "spend", "account" and
+# "legal" are ignored here: they always need a human.
+# Start empty; add e.g. "publish_owned" once you trust an experiment's output.
+auto_approve = []
+# Optional executor: approved actions are POSTed here as JSON (e.g. an n8n
+# workflow that sends the approved email from your mailbox or publishes a post).
+webhook_url = ""
+
+# Per-experiment overrides (all optional).
+[experiments.voice-receptionist]
+api_budget_usd_month = 40
+# model = "worker"   # tier name or explicit model id
+# effort = "medium"
+
+[experiments.micro-tools-seo]
+effort = "high"

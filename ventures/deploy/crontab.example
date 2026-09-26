@@ -1,0 +1,15 @@
+# Run the portfolio heartbeat on a small always-on box (the $6/mo foundation VPS works).
+# `tick` evaluates kill gates, auto-pauses failures, and runs every active
+# experiment whose cadence is due. It never spends money or sends anything
+# without an approval (see venture_lab.example.toml).
+#
+# Install: crontab -e, then paste (adjust paths). Times are server-local.
+ANTHROPIC_API_KEY=sk-ant-...
+VENTURES_CONFIG=/opt/ventures/venture_lab.toml
+
+# Weekdays at 07:40: agent sessions
+40 7 * * 1-5  cd /opt/ventures && .venv/bin/venture-lab tick >> var/tick.log 2>&1
+# Saturday 08:10: a light weekend pass for weekly-cadence experiments
+10 8 * * 6    cd /opt/ventures && .venv/bin/venture-lab tick >> var/tick.log 2>&1
+# Monday 06:50: portfolio report with the AI portfolio-manager memo
+50 6 * * 1    cd /opt/ventures && .venv/bin/venture-lab report --memo >> var/report.log 2>&1
