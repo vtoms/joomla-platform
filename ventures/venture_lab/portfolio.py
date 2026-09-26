@@ -66,6 +66,22 @@ def review(settings: Settings, ledger: Ledger, auto_pause: bool = True) -> list[
     return rows
 
 
+def due_experiments(settings: Settings, ledger: Ledger, *, auto_pause: bool = True) -> list[Experiment]:
+    """Active experiments whose cadence is due, in rank order (after gate review)."""
+    rows = review(settings, ledger, auto_pause=auto_pause)
+    return [r["experiment"] for r in rows if r["status"] == "active" and is_due(r["experiment"], ledger)]
+
+
+def run_session(experiment: Experiment, settings: Settings, ledger: Ledger, **kwargs: Any) -> dict[str, Any]:
+    """One agent session on the configured backend (API credits or Claude Code subscription)."""
+    if settings.backend == "claude-code":
+        from venture_lab.subscription import run_with_claude_code
+
+        kwargs.pop("client", None)
+        return run_with_claude_code(experiment, settings, ledger, **kwargs)
+    return run_experiment(experiment, settings, ledger, **kwargs)
+
+
 def tick(
     settings: Settings,
     ledger: Ledger,
@@ -74,25 +90,22 @@ def tick(
     dry_run: bool = False,
 ) -> list[str]:
     """One scheduler heartbeat: review gates, then run every due active experiment."""
+    due = due_experiments(settings, ledger, auto_pause=not dry_run)
+    if settings.backend == "claude-code":
+        due = due[: settings.subscription.max_sessions_per_tick]
     log = []
-    for row in review(settings, ledger, auto_pause=not dry_run):
-        exp = row["experiment"]
-        if row["status"] != "active":
-            continue
-        if not is_due(exp, ledger):
-            log.append(f"{exp.id}: not due")
-            continue
+    for exp in due:
         if dry_run:
-            log.append(f"{exp.id}: would run")
+            log.append(f"{exp.id}: would run on {settings.backend}")
             continue
         try:
-            run = run_experiment(exp, settings, ledger, client=client)
+            run = run_session(exp, settings, ledger, client=client)
             log.append(f"{exp.id}: {run['status']} (${run['cost_usd']:.2f})")
         except BudgetExceeded as exc:
             log.append(f"{exp.id}: skipped - {exc}")
         except anthropic.APIError as exc:
             log.append(f"{exp.id}: error - {exc}")
-    return log
+    return log or ["nothing due"]
 
 
 def report_markdown(settings: Settings, ledger: Ledger) -> str:

@@ -1,6 +1,19 @@
 # Copy to venture_lab.toml (git-ignored) and adjust.
 home = "var"   # ledger + artifacts; override with VENTURES_HOME
 
+# "claude-code" runs each agent session through `claude -p` on your Claude Pro/Max
+# plan (no API credits). "api" uses the Anthropic API with the budgets below.
+backend = "claude-code"
+
+[subscription]
+claude_bin = "claude"
+cli = "venture-lab"           # must be on PATH for the agent's Bash permission rule
+model = ""                    # "" = Claude Code's default; or a tier name / model id
+max_turns = 40
+max_sessions_per_tick = 3     # protects your plan's usage limits
+permission_mode = "dontAsk"   # tools outside the allowlist are denied, never prompted
+timeout_minutes = 30
+
 [models]
 # Dynamic routing: strategy/sales work on the strongest model, drafting on the
 # mid tier, bulk extraction/classification on the cheapest (via Batch API).
@@ -9,7 +22,7 @@ worker = "claude-sonnet-5"
 bulk = "claude-haiku-4-5"
 
 [budget]
-# Hard monthly cap across all agents. Each experiment also has its own cap
+# API backend only. Hard monthly cap across all agents. Each experiment also has its own cap
 # (see `venture-lab costs`); sessions stop mid-run when either is reached.
 global_api_usd_month = 250
 

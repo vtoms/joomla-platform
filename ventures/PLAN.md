@@ -6,8 +6,10 @@ Prices checked 26 Sep 2026 from vendor pages and secondary sources. Re-check the
 ## TL;DR
 
 - **The portfolio.** Ten experiments, ranked by how quickly they can earn, how little capital they need, how much an agent can do, and risk. Services come first. The report's own conclusion is that cash sits in vertical workflow integration and distribution, not in generic AI output.
-- **Money needed to start.** **~$110 upfront + ~$14/mo** for the shared foundation, plus Claude API usage capped at **$250/mo**. Running all ten adds only **~$65 upfront + ~$4/mo** in required tools. Nothing needs a loan or outside investment.
-- **Recommended before the first paying service client.** About **$100** for an LLC and **~$90–170/mo** for general liability and professional (E&O) insurance.
+- **Money needed to start (updated after the review).** The agents run on your **Claude subscription** (`backend = "claude-code"`), so **no API credits are needed**. The shared foundation is **~$21 upfront + ~$23/mo**: brand domain, a secondary outreach domain, two mailboxes and a small server. Running all ten adds only **~$65 upfront + ~$4/mo** in required tools. Nothing needs a loan or outside investment.
+- **API credits are optional.** Only if you switch to `backend = "api"`: prepaid credits (e.g. $100) with spend capped at $250/mo.
+- **Required before the first paying service client.** About **$100** for an LLC and **~$90–170/mo** for general liability and professional (E&O) insurance. Once you sell services, the real monthly cost is **~$115–195**.
+- **Adversarial review.** See [reviews/2026-09-26-claude-adversarial-review.md](reviews/2026-09-26-claude-adversarial-review.md). Its low-risk fixes are applied: warmed secondary domain, gates moved later, no call recording, insurance required. Its portfolio changes (reprice voice, merge 1+2, swap #4/#9/#10) are awaiting a decision.
 - **Marketing.** **No experiment needs marketing money to start.** Every go-to-market plan begins organic: personalised outreach, SEO pages, free tools, content. Paid tests are optional and capped. They unlock only after an organic channel shows a measured conversion rate. If every paid test ran at once it would total ~$2,000/mo.
 - **The agents.** Each experiment has its own Claude agent. It researches, builds, writes, drafts outreach and content, tracks KPIs, and advances its phase plan on a schedule. A portfolio manager checks kill gates weekly and auto-pauses losers.
 - **Human-gated actions.** Agents **cannot spend money, create accounts or make legal commitments.** Those always wait for your approval. Sending and publishing also wait by default, until you choose to auto-approve them.
@@ -66,18 +68,20 @@ The rank is a portfolio priority, not a pure sort by score. Where the two differ
 
 | Item | Upfront | Monthly | Needed? |
 |---|---|---|---|
-| Anthropic API credits (prepaid). Spend is capped at $250/mo total plus a per-experiment cap | $100 | usage ≤ cap | **Required** |
+| Claude usage for the agents: runs on your Claude Pro/Max subscription | – | included in plan | **Required** (you have it) |
+| Anthropic API credits (only for `backend = "api"`). Spend is capped at $250/mo total plus a per-experiment cap | $100 | usage ≤ cap | Optional |
+| Secondary outreach domain + mailbox, warmed up 2–4 weeks before cold email | $10.44/yr | $8.40 | **Required** for experiments 1, 2, 4, 5 |
 | Brand .com domain (Cloudflare Registrar, at cost) | $10.44/yr | – | **Required** |
 | Google Workspace Business Starter, 1 mailbox | – | $8.40 ($7 on an annual plan) | **Required** |
 | DigitalOcean Basic droplet (runs the agents' cron, n8n and small services) | – | $6 | **Required** |
 | Stripe (payment links, invoices) | – | 2.9% + $0.30 per payment | **Required** (fees only) |
 | LLC (e.g. Wyoming $100 + $60/yr; $35–$500 by state) | ~$100 | ~$5 | Recommended before client contracts |
 | General liability + E&O insurance | – | ~$90–170 | Recommended before the first service client |
-| **Required total** | **~$110** | **~$14 + API usage** | |
+| **Required total** | **~$21** | **~$23** | |
 
 ### Per experiment
 
-API spend is capped separately: $15–40/mo per experiment and $250 for the portfolio. Paid marketing is always an optional test that unlocks only after organic proof.
+On the subscription backend there is no API spend. On the API backend, spend is capped separately: $15–40/mo per experiment and $250 for the portfolio. Paid marketing is always an optional test that unlocks only after organic proof.
 
 | # | Experiment | Required setup | Required monthly | Optional ops (when scaling) | Optional paid marketing (after proof) | API cap/mo | Human hrs/wk | Time to first $ |
 |---|---|---|---|---|---|---|---|---|
@@ -113,13 +117,13 @@ Each section is the summary. The full brief each agent works from is in `venture
 - **You do:** approve spend and accounts, import specs, run discovery calls and demos, close deals, and report outcomes.
 - **Marketing and SEO:**
   - Personalised cold email (max 20/day, from your own mailbox, $0).
-  - An after-hours missed-call audit: you call the prospect after hours and send a 60-second video showing what happened.
+  - An after-hours missed-call audit: you call the prospect's line after hours (no recording) and send a short written note of what happened.
   - A live demo line on the landing page.
   - Trade partnerships with supply houses and associations, plus a referral month.
   - SEO: one landing page per vertical × city ("AI answering service for HVAC companies in Denver"), cost and comparison pages, a Google Business Profile, and case studies.
 - **Funding.** None needed to start. Search ads (~$300–600/mo *est.*) only after 2 closed deals give a real close rate. Insurance before the first client.
 - **Gates.** Kill or rethink if any of these fails:
-  - Day 30: ≥3 discovery calls booked.
+  - Day 45: ≥3 discovery calls booked (moved from day 30 to allow for the domain warm-up).
   - Day 60: ≥1 paying client.
   - Day 90: ≥3 clients (target $1,500 MRR).
 - **Compliance.** Inbound calls only; outbound AI calls need prior express written consent under TCPA. Sending texts needs A2P 10DLC registration. Healthcare and legal verticals are excluded until HIPAA and bar-rule handling exists.
@@ -135,7 +139,7 @@ Each section is the summary. The full brief each agent works from is in `venture
   - Cross-sell to experiment 1's prospects who aren't ready for voice.
   - SEO: "missed call text back for <trade>" pages and a free lead-leakage calculator.
 - **Funding.** None. Retargeting (~$150/mo) is optional later.
-- **Gates.** Day 30: ≥3 discovery calls. Day 60: ≥1 client. Day 90: ≥4 clients.
+- **Gates.** Day 45: ≥3 discovery calls. Day 60: ≥1 client. Day 90: ≥4 clients.
 
 ### 3. Productized AI workflow audit (`ai-ops-audit`)
 
@@ -161,7 +165,7 @@ Each section is the summary. The full brief each agent works from is in `venture
   - Later, a Shopify App Store listing ($19 one-time; 0% revenue share on the first $1M) with App Store search optimisation.
   - SEO: Shopify returns and order-status automation how-tos, an honest comparison with native helpdesk AI, and a support cost calculator.
 - **Funding.** None for the first clients. App Store ads are optional once there are reviews.
-- **Gates.** Day 30: ≥3 calls. Day 60: ≥1 pilot store. Day 90: ≥2 paying clients (target ≥30% deflection).
+- **Gates.** Day 45: ≥3 calls. Day 60: ≥1 pilot store. Day 90: ≥2 paying clients (target ≥30% deflection).
 
 ### 5. Batch document extraction service (`doc-extraction`)
 
@@ -239,7 +243,7 @@ Each section is the summary. The full brief each agent works from is in `venture
 
 ## Launch sequence
 
-| Wave | When | Experiments | Why | API cap to set |
+| Wave | When | Experiments | Why | API cap to set (API backend only) |
 |---|---|---|---|---|
 | 1 | Week 1 | 3 audit, 1 voice receptionist, 2 speed-to-lead, 8 newsletter | Fastest cash, shared prospect research, audience from day one | ~$110/mo |
 | 2 | Week 3–4 | 5 doc extraction, 6 micro-tools, 7 templates | Reuse wave-1 builds; long-lead SEO starts early | +$75/mo |
@@ -250,7 +254,7 @@ Every Monday the portfolio manager (`venture-lab report --memo`) recommends whet
 ## How the agents run
 
 ```
-cron / GitHub Actions ──► venture-lab tick
+cron / cloud routine ──► venture-lab tick   (backend: claude-code = your subscription | api = API credits)
                              │
                              ├─ portfolio review: evaluate gates on verified metrics → auto-pause hard failures
                              └─ for each active experiment whose cadence is due:
@@ -271,7 +275,9 @@ cron / GitHub Actions ──► venture-lab tick
 - Gates count only human- or integration-reported numbers for revenue, clients and sales. The agent can't talk its way past a kill gate.
 - Artifacts are sandboxed to the experiment's workspace.
 
-**Model routing.**
+**Subscription backend.** Each session is `claude -p`, with tools limited to: web search and fetch, file edits inside the experiment's workspace, and `venture-lab agent …` commands. Anything else is denied, not prompted. The owner-only commands (approve, metric, activate…) refuse to run inside agent sessions. A live test on 26 Sep 2026 confirmed that the agent wrote its file, recorded its metric, and was blocked from `approve`.
+
+**Model routing (API backend).**
 - Strategy and sales experiments use `claude-opus-5` with adaptive thinking and server-side refusal fallback.
 - Content-heavy experiments use `claude-sonnet-5`.
 - Bulk extraction uses `claude-haiku-4-5` through the Batch API.
@@ -287,9 +293,11 @@ cron / GitHub Actions ──► venture-lab tick
 
 ## Your first-week checklist
 
-1. **Foundation.** Buy the domain, create the Workspace mailbox and a Stripe account, and prepay $100 of Anthropic API credits. Put the key on the VPS (≈$110 + $14/mo).
-2. **Install.** `pip install -e ventures/`, copy `venture_lab.example.toml` to `venture_lab.toml`, then `venture-lab activate ai-ops-audit voice-receptionist speed-to-lead ai-ops-newsletter`.
-3. **First sessions.** `venture-lab run <id>` once for each experiment, then install the cron in `deploy/crontab.example`.
+1. **Foundation.** Buy the brand domain and a secondary outreach domain, create two Workspace mailboxes and a Stripe account (≈$21 + $23/mo). Start warming up the outreach mailbox on day 1.
+2. **Pick where the agents run (both use your subscription, no API key):**
+   - **Cloud:** a scheduled Claude Code routine, as described in [deploy/cloud-routine.md](deploy/cloud-routine.md). State is committed to the repo.
+   - **Your computer:** `pip install -e ventures/`, copy `venture_lab.example.toml` to `venture_lab.toml` (it defaults to `backend = "claude-code"`), then cron `venture-lab tick`.
+3. **Activate.** `venture-lab activate ai-ops-audit voice-receptionist speed-to-lead ai-ops-newsletter`, or the reviewed line-up once you decide. At most 3 sessions run per scheduled run, to protect your plan's usage limits.
 4. **Approvals.** Review the queue daily with `venture-lab approvals -v`, then `approve`/`reject` with a note. The agents read your notes.
 5. **Report real numbers.** `venture-lab metric voice-receptionist discovery_calls_booked 2` and similar.
 6. **Before the first paying service client:** LLC and insurance (~$100 + ~$90–170/mo).

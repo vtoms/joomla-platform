@@ -14,9 +14,17 @@ FOUNDATION: tuple[CostItem, ...] = (
         100,
         0,
         "draws down at the portfolio cap, $250/mo by default",
+        required=False,
+        note="only for backend = api; $0 when agents run on your Claude subscription (backend = claude-code)",
     ),
     CostItem("Brand .com domain (Cloudflare Registrar, at cost)", 10.44, 0, "renews ~$10.44/yr"),
     CostItem("Google Workspace Business Starter, 1 mailbox (Flexible)", 0, 8.40, note="$7/mo on an annual plan"),
+    CostItem(
+        "Secondary outreach domain + mailbox, warmed up 2-4 weeks before any cold email",
+        10.44,
+        8.40,
+        note="protects the brand domain's deliverability (experiments 1, 2, 4, 5)",
+    ),
     CostItem("Stripe account (payment links, invoices)", 0, 0, "2.9% + $0.30 per US card payment"),
     CostItem("VPS for n8n and small services (DigitalOcean Basic 1 GB)", 0, 6),
     CostItem(
@@ -31,7 +39,7 @@ FOUNDATION: tuple[CostItem, ...] = (
         0,
         130,
         required=False,
-        note="~$90-170/mo; get it before the first paying service client (experiments 1-5)",
+        note="~$90-170/mo; required in practice before the first paying service client (experiments 1-5)",
     ),
 )
 
@@ -46,6 +54,8 @@ def foundation_monthly(required_only: bool = True) -> float:
 
 LOCAL_SERVICE_COMPLIANCE = (
     "Outreach: personalised B2B email only, at most 20/day during validation, truthful sender, physical address and opt-out (CAN-SPAM).",
+    "Cold email goes only from the warmed secondary domain, never the brand domain; stop if spam complaints near 0.1%.",
+    "Never record calls with prospects (all-party-consent states); describe what happened in writing instead.",
     "No outbound AI calls or AI texts to consumers without prior express written consent (TCPA).",
     "Business SMS needs A2P 10DLC brand + campaign registration before sending.",
     "The AI must disclose it is an AI when asked; greetings announce recording.",
@@ -173,7 +183,7 @@ _EXPERIMENTS: tuple[Experiment, ...] = (
             ),
         ),
         gates=(
-            Gate(30, "discovery_calls_booked", ">=", 3),
+            Gate(45, "discovery_calls_booked", ">=", 3),  # ~30 days of sending after warm-up
             Gate(60, "paying_clients", ">=", 1),
             Gate(90, "paying_clients", ">=", 3),
             Gate(90, "mrr_usd", ">=", 1500, hard=False),
@@ -266,7 +276,7 @@ _EXPERIMENTS: tuple[Experiment, ...] = (
             ),
         ),
         gates=(
-            Gate(30, "discovery_calls_booked", ">=", 3),
+            Gate(45, "discovery_calls_booked", ">=", 3),  # ~30 days of sending after warm-up
             Gate(60, "paying_clients", ">=", 1),
             Gate(90, "paying_clients", ">=", 4),
             Gate(90, "mrr_usd", ">=", 1000, hard=False),
@@ -412,7 +422,7 @@ _EXPERIMENTS: tuple[Experiment, ...] = (
             ),
         ),
         gates=(
-            Gate(30, "discovery_calls_booked", ">=", 3),
+            Gate(45, "discovery_calls_booked", ">=", 3),  # ~30 days of sending after warm-up
             Gate(60, "pilot_stores", ">=", 1),
             Gate(90, "paying_clients", ">=", 2),
             Gate(90, "deflection_rate_pct", ">=", 30, hard=False),

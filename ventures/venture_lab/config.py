@@ -85,6 +85,19 @@ class ExperimentSettings:
 
 
 @dataclass
+class SubscriptionSettings:
+    """Run agent sessions through Claude Code (`claude -p`) on a Pro/Max plan instead of API credits."""
+
+    claude_bin: str = "claude"
+    cli: str = "venture-lab"  # how the agent invokes this package's CLI
+    model: str = ""  # empty = Claude Code's default for your plan
+    max_turns: int = 40
+    max_sessions_per_tick: int = 3  # protects your plan's usage limits
+    permission_mode: str = "dontAsk"
+    timeout_minutes: int = 30
+
+
+@dataclass
 class Settings:
     home: Path
     models: ModelTiers = field(default_factory=ModelTiers)
@@ -94,6 +107,9 @@ class Settings:
     auto_approve: list[str] = field(default_factory=list)
     webhook_url: str = ""
     experiments: dict[str, ExperimentSettings] = field(default_factory=dict)
+    backend: str = "api"  # api | claude-code
+    subscription: SubscriptionSettings = field(default_factory=SubscriptionSettings)
+    config_path: Path | None = None
 
     @property
     def db_path(self) -> Path:
@@ -127,7 +143,12 @@ def load_settings(path: str | os.PathLike[str] | None = None) -> Settings:
         auto_approve=list(approvals.get("auto_approve", [])),
         webhook_url=str(approvals.get("webhook_url", "")),
         experiments={key: ExperimentSettings(**value) for key, value in raw.get("experiments", {}).items()},
+        backend=str(raw.get("backend", "api")),
+        subscription=SubscriptionSettings(**raw.get("subscription", {})),
+        config_path=path if path.exists() else None,
     )
+    if settings.backend not in {"api", "claude-code"}:
+        raise ValueError(f"backend must be 'api' or 'claude-code', not {settings.backend!r}")
     settings.home.mkdir(parents=True, exist_ok=True)
     settings.artifacts_dir.mkdir(parents=True, exist_ok=True)
     return settings

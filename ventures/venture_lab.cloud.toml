@@ -1,0 +1,11 @@
+# Config for scheduled Claude Code cloud sessions (Routines) on your subscription.
+# State lives in ventures/state/ and is committed back to the branch after each run,
+# because cloud containers are discarded after the session.
+home = "state"
+backend = "claude-code"
+
+[subscription]
+max_sessions_per_tick = 3   # experiments worked per scheduled run
+
+[approvals]
+auto_approve = []            # everything outward-facing waits for you

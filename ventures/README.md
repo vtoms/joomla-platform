@@ -10,6 +10,11 @@ Each experiment has an agent that works in scheduled sessions. In each session i
 
 A portfolio manager evaluates kill gates on verified metrics, auto-pauses failures, and writes a weekly memo.
 
+## Two ways to pay for the agents' Claude usage
+
+- **Subscription (default, recommended).** `backend = "claude-code"`: each session runs `claude -p` on your Claude Pro/Max plan. No API key; usage counts against your plan's limits. Run it from cron on your computer, or as a scheduled Claude Code cloud routine ([deploy/cloud-routine.md](deploy/cloud-routine.md)).
+- **API credits.** `backend = "api"`: Anthropic SDK tool runner with per-experiment dollar caps, prompt caching and the Batch API (needed for large document-extraction jobs).
+
 ## Setup
 
 ```bash
@@ -17,10 +22,11 @@ cd ventures
 python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 cp venture_lab.example.toml venture_lab.toml     # budgets, models, auto-approvals
-export ANTHROPIC_API_KEY=sk-ant-...               # or `ant auth login`
+# Subscription backend: just be logged in to Claude Code (`claude`); no API key.
+# API backend only: export ANTHROPIC_API_KEY=sk-ant-...
 venture-lab costs                                 # what you'd be paying for
 venture-lab activate ai-ops-audit voice-receptionist speed-to-lead ai-ops-newsletter
-venture-lab run voice-receptionist --dry-run      # inspect the request, no API call
+venture-lab run voice-receptionist --dry-run      # API backend: inspect the request, no API call
 venture-lab run voice-receptionist                # one real session
 ```
 
@@ -35,6 +41,7 @@ Then schedule `venture-lab tick` with [deploy/crontab.example](deploy/crontab.ex
 | Review what agents want to do | `venture-lab approvals --status pending -v` |
 | Decide | `venture-lab approve 12 --note "go"`, `venture-lab reject 13 --note "too salesy; lead with the audit"`, `venture-lab done 12` once you've executed it |
 | Report real numbers (these drive the gates) | `venture-lab metric voice-receptionist paying_clients 1` |
+| Agent-side commands (used by sessions on the subscription) | `venture-lab agent begin/finish/metric/learn/request/actions/advance/economics/voice-spec` |
 | Steer a session | `venture-lab run doc-extraction --task "Label-check the 30 sample leases and report accuracy"` |
 | Pause / kill / resume despite a failed gate | `venture-lab pause X`, `venture-lab kill X`, `venture-lab activate X --override "seasonal dip"` |
 
@@ -54,6 +61,8 @@ Artifacts live in `var/artifacts/<experiment>/`. The ledger (runs, spend, metric
 |---|---|
 | `venture_lab/experiments/catalog.py` | The 10 experiments: thesis, offer, costs, phases, gates, KPIs |
 | `venture_lab/experiments/marketing.py` | Go-to-market, SEO plan and funding verdict per experiment |
+| `venture_lab/subscription.py` | Subscription backend: `claude -p` sessions, tool allowlist, agent protocol |
+| `reviews/` | Adversarial review of the plan, plus `run_gpt_review.sh` for a second opinion via the Codex CLI |
 | `venture_lab/agent.py` | One agent session: SDK tool runner, cached brief, cost accounting, pause-turn handling |
 | `venture_lab/tools.py` | Shared tools (artifacts, metrics, learnings, action requests) |
 | `venture_lab/specialized/` | Voice receptionist spec builder, unit economics, Batch-API document extraction |

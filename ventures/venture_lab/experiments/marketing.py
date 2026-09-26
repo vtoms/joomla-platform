@@ -11,7 +11,7 @@ MARKETING: dict[str, Marketing] = {
         positioning="'Never miss an emergency call again': the AI receptionist built only for <trade> companies in <metro>.",
         channels=(
             "Personalised cold email from your own mailbox (max 20/day) to owners found in public Google Maps listings, each with a specific observation (hours, reviews mentioning unanswered calls).",
-            "After-hours 'missed-call audit': the human calls the prospect after hours and sends a 60-second video of what happened plus the demo line number.",
+            "After-hours 'missed-call audit': the human calls the prospect's line after hours (no recording) and sends a short written note of what happened, plus the demo line number.",
             "Live demo phone number on the landing page and in every email: the product sells itself on a call.",
             "Trade partnerships: supply houses/distributors, trade associations and local business groups (talks, co-branded offers).",
             "Owner communities (trade Facebook groups, subreddits): useful posts about missed-call economics, no pitching.",
